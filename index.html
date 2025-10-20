@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAXSEE - Order Receipt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #e8e8e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #f5f5f5;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(0,0,0,0.1);
+            color: white;
+            padding: 6px 16px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            height: 30px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 20;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .status-right {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* ACTUAL Map Background - Using the screenshot */
+        .map-background {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 310px;
+            /* Put your map screenshot here as background-image */
+            /* For now using a placeholder - replace with: background-image: url('path-to-your-map-screenshot.png'); */
+            background: linear-gradient(135deg, #ebe8e3 0%, #e8e5e0 100%);
+            background-size: cover;
+            background-position: center top;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Map overlay elements to match screenshot */
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* Since I can't directly access your image file, I'll create CSS representation */
+        /* But you can replace the .map-background with: */
+        /* background-image: url('data:image/png;base64,YOUR_IMAGE_DATA'); */
+        
+        .map-roads {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .road-dashed {
+            position: absolute;
+            border: 2px dashed #b8d4b8;
+            background: transparent;
+        }
+
+        .road-1 {
+            top: 55px;
+            left: -20px;
+            width: 250px;
+            height: 1px;
+            transform: rotate(-8deg);
+        }
+
+        .road-2 {
+            top: 80px;
+            left: 130px;
+            width: 150px;
+            height: 80px;
+            border: 2px dashed #c5ddc5;
+            border-top: none;
+            border-left: none;
+            border-radius: 0 0 60px 0;
+        }
+
+        .street-solid {
+            position: absolute;
+            background: #ddd;
+            height: 2px;
+        }
+
+        .street-slivnitsa {
+            top: 170px;
+            right: -50px;
+            width: 300px;
+            transform: rotate(28deg);
+        }
+
+        .street-balgarski {
+            bottom: 65px;
+            right: -30px;
+            width: 350px;
+            transform: rotate(-15deg);
+        }
+
+        .map-parks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .park {
+            position: absolute;
+            background: #d4e8d4;
+            opacity: 0.7;
+            border-radius: 4px;
+        }
+
+        .park-1 {
+            top: 140px;
+            right: 20px;
+            width: 200px;
+            height: 160px;
+        }
+
+        .park-2 {
+            top: 160px;
+            left: 10px;
+            width: 90px;
+            height: 70px;
+        }
+
+        .park-3 {
+            bottom: 30px;
+            left: 0;
+            width: 130px;
+            height: 90px;
+        }
+
+        .park-4 {
+            bottom: 30px;
+            left: 50px;
+            width: 300px;
+            height: 100px;
+        }
+
+        .map-buildings {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .building {
+            position: absolute;
+            background: #c8c5c0;
+            border: 1px solid #b5b2ad;
+        }
+
+        .building-large {
+            bottom: 100px;
+            left: 100px;
+            width: 150px;
+            height: 90px;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+        }
+
+        .map-labels {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            font-size: 11px;
+            color: #4a90a4;
+        }
+
+        .label {
+            position: absolute;
+            font-weight: 500;
+            text-shadow: 0 0 3px white;
+            white-space: nowrap;
+        }
+
+        .label-vinitsa {
+            top: 70px;
+            left: 10px;
+            transform: rotate(-5deg);
+        }
+
+        .label-plastik {
+            top: 105px;
+            right: 40px;
+            font-size: 9px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .label-francisko {
+            top: 155px;
+            right: 15px;
+            font-size: 9px;
+        }
+
+        .label-slivnitsa {
+            top: 180px;
+            right: 30px;
+            transform: rotate(28deg);
+        }
+
+        .label-infrakom {
+            top: 180px;
+            left: 30px;
+            font-size: 9px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .label-balgarski {
+            bottom: 85px;
+            right: 50px;
+            transform: rotate(-15deg);
+        }
+
+        .label-evro {
+            bottom: 120px;
+            left: 110px;
+            font-size: 9px;
+        }
+
+        .label-babal {
+            bottom: 55px;
+            right: 40px;
+            font-size: 9px;
+        }
+
+        .building-icon {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4db8d4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .icon-plastik {
+            top: 95px;
+            right: 60px;
+        }
+
+        .icon-infrakom {
+            top: 170px;
+            left: 48px;
+        }
+
+        .icon-evro {
+            bottom: 130px;
+            left: 130px;
+        }
+
+        .icon-babal {
+            bottom: 70px;
+            right: 50px;
+        }
+
+        .icon-lock {
+            top: 135px;
+            right: 55px;
+        }
+
+        .house-number {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .num-1-center {
+            top: 185px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .num-1-left {
+            top: 220px;
+            left: 25px;
+        }
+
+        .num-4 {
+            bottom: 140px;
+            left: 30px;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            right: 12px;
+            bottom: 110px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 3;
+        }
+
+        .zoom-btn {
+            width: 38px;
+            height: 38px;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            font-weight: 300;
+        }
+
+        .zoom-btn:first-child {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .car-icon {
+            position: absolute;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        .car-svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Header */
+        .header {
+            background: transparent;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 26px;
+            color: #555;
+            font-weight: 300;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding-bottom: 3px;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #000;
+        }
+
+        .star-btn {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 19px;
+            color: #555;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Feedback Bar */
+        .feedback-container {
+            padding: 0 10px;
+            position: relative;
+            z-index: 10;
+            margin-top: 4px;
+        }
+        
+        .feedback-bar {
+            background: rgba(45, 45, 45, 0.95);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        }
+
+        .feedback-label {
+            font-size: 15px;
+            font-weight: 400;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .feedback-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            margin: 0 auto;
+            flex: 1;
+            max-width: 1px;
+            margin-left: 18px;
+            margin-right: 18px;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .thumb-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 2px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumb-icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        .feedback-text {
+            font-size: 11px;
+            color: rgba(255,255,255,0.45);
+            margin-left: 10px;
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 12px auto 8px;
+        }
+
+        /* Content Scroll Area */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            background: white;
+            margin-top: 16px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+        }
+
+        .content {
+            padding: 0 20px 20px;
+        }
+
+        /* Order Details Section */
+        .order-section {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .order-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .driver-name {
+            font-weight: 700;
+            color: #000;
+        }
+
+        .car-details {
+            font-weight: 700;
+            color: #000;
+        }
+
+        .license-plate {
+            font-weight: 700;
+            color: #000;
+        }
+
+        .rating {
+            font-size: 14px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #555;
+        }
+
+        .stars {
+            color: #ffc107;
+            letter-spacing: 0px;
+            font-size: 15px;
+        }
+
+        .rating-score {
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            justify-content: center;
+            gap: 100px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .action-btn-circle {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn-icon {
+            width: 22px;
+            height: 22px;
+            color: #666;
+        }
+
+        .action-btn-label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 400;
+        }
+
+        /* Route and Price Container */
+        .route-price-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        /* Price Badge */
+        .price-badge {
+            position: absolute;
+            right: 0;
+            top: 0;
+            text-align: right;
+            z-index: 10;
+        }
+
+        .price-amount {
+            font-size: 30px;
+            font-weight: 700;
+            color: #000;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: #999;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* Route Section */
+        .route-section {
+            padding-right: 0;
+            padding-top: 0;
+        }
+
+        .route-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .route-item:first-child {
+            margin-top: 0;
+        }
+
+        .route-item:last-child {
+            margin-bottom: 14px;
+        }
+
+        .route-marker {
+            position: relative;
+            width: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            padding-top: 3px;
+        }
+
+        .marker-circle {
+            width: 14px;
+            height: 14px;
+            border: 2.5px solid #1a1a1a;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .marker-filled {
+            width: 14px;
+            height: 14px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        .marker-line {
+            width: 1.5px;
+            background: #d5d5d5;
+            position: absolute;
+            top: 17px;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .route-item:last-child .marker-line {
+            display: none;
+        }
+
+        .route-info {
+            flex: 1;
+            padding-top: 0;
+            max-width: 190px;
+        }
+
+        .route-title {
+            font-size: 14px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+            line-height: 1.35;
+        }
+
+        .route-subtitle {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.3;
+        }
+
+        /* Bottom Buttons */
+        .bottom-buttons {
+            display: flex;
+            margin-bottom: 16px;
+            overflow: hidden;
+            border-radius: 26px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        .bottom-btn {
+            flex: 1;
+            padding: 16px 16px;
+            border: none;
+            background: #ffc107;
+            color: #000;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .bottom-btn:first-child {
+            border-right: 0.5px solid rgba(0,0,0,0.06);
+        }
+
+        .bottom-btn:active {
+            background: #ffb300;
+        }
+
+        /* Navigation Bar */
+        .navigation-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding-bottom: 6px;
+        }
+
+        .nav-item {
+            width: 54px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .nav-menu {
+            font-weight: 200;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-circle {
+            width: 19px;
+            height: 19px;
+            border: 2px solid #aaa;
+            border-radius: 50%;
+        }
+        
+        .nav-back {
+            font-size: 22px;
+            font-weight: 200;
+        }
+
+        /* Scrollbar */
+        .content-wrapper::-webkit-scrollbar {
+            width: 0;
+        }
+
+        /* NOTE: To use the actual screenshot, save your map image and replace the background in .map-background with:
+           background-image: url('your-map-screenshot.png');
+           Or if you want to embed it directly, convert to base64 and use:
+           background-image: url('data:image/png;base64,YOUR_BASE64_STRING_HERE');
+        */
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span>12:24</span>
+                <span style="margin-left: 2px;">✓</span>
+                <span>📞</span>
+                <span>✉</span>
+            </div>
+            <div class="status-right">
+                <span>🔇</span>
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋 29</span>
+            </div>
+        </div>
+
+        <!-- Map Background -->
+        <div class="map-background">
+            <div class="map-overlay">
+                <!-- Roads -->
+                <div class="map-roads">
+                    <div class="road-dashed road-1"></div>
+                    <div class="road-2"></div>
+                    <div class="street-solid street-slivnitsa"></div>
+                    <div class="street-solid street-balgarski"></div>
+                </div>
+
+                <!-- Parks -->
+                <div class="map-parks">
+                    <div class="park park-1"></div>
+                    <div class="park park-2"></div>
+                    <div class="park park-3"></div>
+                    <div class="park park-4"></div>
+                </div>
+
+                <!-- Buildings -->
+                <div class="map-buildings">
+                    <div class="building building-large"></div>
+                </div>
+
+                <!-- Labels -->
+                <div class="map-labels">
+                    <div class="label label-vinitsa">Vinitsa Blvd</div>
+                    <div class="label label-plastik">Пластик<br>София люлин</div>
+                    <div class="label label-francisko">Франсиско</div>
+                    <div class="label label-slivnitsa">Slivnitsa Blvd</div>
+                    <div class="label label-infrakom">Инфраком<br>България еоод</div>
+                    <div class="label label-balgarski">Balgarski pravednist</div>
+                    <div class="label label-evro">Евро ел. строй</div>
+                    <div class="label label-babal">Бабъл уеч</div>
+                </div>
+
+                <!-- Building Icons -->
+                <div class="building-icon icon-plastik">🔒</div>
+                <div class="building-icon icon-infrakom">🏢</div>
+                <div class="building-icon icon-evro">🏢</div>
+                <div class="building-icon icon-babal">🏢</div>
+                <div class="building-icon icon-lock">🔒</div>
+
+                <!-- House Numbers -->
+                <div class="house-number num-1-center">1</div>
+                <div class="house-number num-1-left">1</div>
+                <div class="house-number num-4">4</div>
+
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn">+</button>
+                    <button class="zoom-btn">−</button>
+                </div>
+
+                <!-- Car Icon -->
+                <div class="car-icon">
+                    <svg class="car-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="16" cy="28" rx="10" ry="2.5" fill="rgba(0,0,0,0.15)"/>
+                        <path d="M8 18h16v6c0 1.1-.9 2-2 2h-12c-1.1 0-2-.9-2-2v-6z" fill="#5A5A5A"/>
+                        <path d="M10 12l2-6h8l2 6h-12z" fill="#737373"/>
+                        <rect x="7" y="12" width="18" height="6" rx="1" fill="#666"/>
+                        <circle cx="10" cy="15" r="1.5" fill="#FFD700" opacity="0.9"/>
+                        <circle cx="22" cy="15" r="1.5" fill="#FFD700" opacity="0.9"/>
+                        <rect x="13" y="8" width="6" height="4" rx="1" fill="#ADD8E6" opacity="0.7"/>
+                        <circle cx="10" cy="22" r="2" fill="#2A2A2A"/>
+                        <circle cx="22" cy="22" r="2" fill="#2A2A2A"/>
+                        <circle cx="10" cy="22" r="0.8" fill="#555"/>
+                        <circle cx="22" cy="22" r="0.8" fill="#555"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn">‹</button>
+                <div class="logo">TAXSEE</div>
+            </div>
+            <button class="star-btn">☆</button>
+        </div>
+
+        <!-- Feedback Bar -->
+        <div class="feedback-container">
+            <div class="feedback-bar">
+                <span class="feedback-label">How did we do?</span>
+                <div class="feedback-divider"></div>
+                <div class="feedback-buttons">
+                    <button class="thumb-btn">
+                        <svg class="thumb-icon" viewBox="0 0 24 24" fill="white">
+                            <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                        </svg>
+                    </button>
+                    <button class="thumb-btn">
+                        <svg class="thumb-icon" viewBox="0 0 24 24" fill="white">
+                            <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="feedback-text">Metrics</span>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="sheet-handle"></div>
+            <div class="content">
+                <!-- Order Details -->
+                <div class="order-section">
+                    <div class="order-text">
+                        Your order was fulfilled by <span class="driver-name">Mitko</span> in a<br>
+                        <span class="car-details">light gray Mercedes E-class</span>, license plate<br>
+                        number <span class="license-plate">7271</span>.<br>
+                        Thank you for riding with us!
+                    </div>
+                    <div class="rating">
+                        Rating <span class="stars">★★★★☆</span><span class="rating-score">(4.45)</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn">
+                        <div class="action-btn-circle">
+                            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="#666">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn-label">Message</div>
+                    </button>
+                    <button class="action-btn">
+                        <div class="action-btn-circle">
+                            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="#666">
+                                <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn-label">Support</div>
+                    </button>
+                </div>
+
+                <!-- Route and Price Container -->
+                <div class="route-price-wrapper">
+                    <!-- Price Badge -->
+                    <div class="price-badge">
+                        <div class="price-amount">лв24.3</div>
+                        <div class="price-label">in cash</div>
+                    </div>
+
+                    <!-- Route Section with 49 Samokov -->
+                    <div class="route-section">
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-circle"></div>
+                                <div class="marker-line"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">307, Matey Preobrazheski street</div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-filled">1</div>
+                                <div class="marker-line"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">49, bul Samokov</div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-filled">2</div>
+                                <div class="marker-line"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">Sesame</div>
+                                <div class="route-subtitle">Lomsko highway</div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-circle"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">307, Matey Preobrazheski street</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Buttons -->
+                <div class="bottom-buttons">
+                    <button class="bottom-btn">Return route</button>
+                    <button class="bottom-btn">Repeat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <div class="nav-item nav-menu">|||</div>
+            <div class="nav-item">
+                <div class="nav-circle"></div>
+            </div>
+            <div class="nav-item nav-back">‹</div>
+        </div>
+    </div>
+</body>
+</html>
