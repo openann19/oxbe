@@ -1,11 +1,758 @@
-<html>
-  <head>
-    <title>My Web Page</title>
-  </head>
-  <body>
-    <div>
-      <h1>Welcome to My Web Page</h1>
-      <p>Route: 49, bul Samokov</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAXSEE - Order Receipt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           ULTRA PIXEL-PERFECT TAXSEE DESIGN
+           Complete with Map & All Elements
+        ======================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ========== PHONE FRAME ========== */
+        .phone-frame {
+            width: 462px;
+            height: 1000px;
+            background: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+            border-radius: 40px;
+        }
+
+        /* ========== STATUS BAR ========== */
+        .status-bar {
+            background: transparent;
+            color: #000000;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            height: 36px;
+            font-weight: 600;
+            z-index: 20;
+            position: relative;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+        }
+
+        .status-right {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        /* ========== MAP SECTION ========== */
+        .map-section {
+            position: relative;
+            height: 365px;
+            background: #e8e6e2;
+            overflow: hidden;
+        }
+
+        .map-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ebe8e3 0%, #e8e5e0 100%);
+        }
+
+        /* Map Elements */
+        .map-street {
+            position: absolute;
+            font-size: 13px;
+            color: #7ba3b5;
+            font-weight: 500;
+            text-shadow: 0 0 3px rgba(255,255,255,0.8);
+        }
+
+        .street-vinitsa {
+            top: 85px;
+            left: 20px;
+            transform: rotate(-5deg);
+        }
+
+        .street-slivnitsa {
+            top: 200px;
+            right: 40px;
+            transform: rotate(25deg);
+        }
+
+        .map-icon {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .icon-1 {
+            top: 210px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .icon-2 {
+            top: 250px;
+            left: 35px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: transparent;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 36px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn,
+        .star-btn {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            transition: all 0.15s ease;
+        }
+
+        .back-btn {
+            font-size: 32px;
+            font-weight: 300;
+            padding-bottom: 2px;
+        }
+
+        .star-btn {
+            font-size: 24px;
+        }
+
+        .back-btn:active,
+        .star-btn:active {
+            transform: scale(0.95);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            color: #000;
+        }
+
+        /* ========== FEEDBACK BAR ========== */
+        .feedback-container {
+            padding: 0 14px;
+            position: absolute;
+            top: 195px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .feedback-bar {
+            background: rgba(45, 45, 45, 0.97);
+            color: white;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+        }
+
+        .feedback-label {
+            font-size: 18px;
+            font-weight: 400;
+            flex-shrink: 0;
+        }
+
+        .feedback-divider {
+            width: 1px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.22);
+            margin: 0 20px;
+            flex-shrink: 0;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .thumb-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            transition: transform 0.15s ease;
+        }
+
+        .thumb-btn:active {
+            transform: scale(0.9);
+        }
+
+        .thumb-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.48);
+            margin-left: 14px;
+            flex-shrink: 0;
+        }
+
+        /* ========== CONTENT WRAPPER ========== */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            background: white;
+            margin-top: 34px;
+            border-radius: 28px 28px 0 0;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 5;
+        }
+
+        .content-wrapper::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .sheet-handle {
+            width: 48px;
+            height: 5px;
+            background: #d9d9d9;
+            border-radius: 2.5px;
+            margin: 12px auto 20px;
+        }
+
+        .content {
+            padding: 0 24px 20px;
+            flex: 1;
+        }
+
+        /* ========== ORDER SECTION ========== */
+        .order-section {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .order-text {
+            font-size: 18px;
+            line-height: 1.55;
+            color: #000;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        .driver-name,
+        .car-details,
+        .license-plate {
+            font-weight: 700;
+            color: #000;
+        }
+
+        .rating {
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #000;
+            margin-top: 8px;
+        }
+
+        .stars {
+            color: #ffc107;
+            letter-spacing: 2px;
+            font-size: 17px;
+        }
+
+        .rating-score {
+            color: #000;
+            font-weight: 400;
+        }
+
+        /* ========== ACTION BUTTONS ========== */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            margin-bottom: 32px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+            transition: transform 0.15s ease;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .action-btn-icon {
+            width: 28px;
+            height: 28px;
+            color: #666;
+        }
+
+        .action-btn-label {
+            font-size: 16px;
+            color: #000;
+            font-weight: 400;
+        }
+
+        /* ========== ROUTE & PRICE ========== */
+        .route-price-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .price-badge {
+            position: absolute;
+            right: 0;
+            top: 0;
+            text-align: right;
+            z-index: 10;
+        }
+
+        .price-amount {
+            font-size: 40px;
+            font-weight: 700;
+            color: #000;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .price-label {
+            font-size: 15px;
+            color: #999;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .route-section {
+            padding-right: 125px;
+        }
+
+        /* ========== ROUTE ITEMS ========== */
+        .route-item {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .route-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .route-marker {
+            position: relative;
+            width: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .marker-circle {
+            width: 18px;
+            height: 18px;
+            border: 3px solid #000;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .marker-filled {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .marker-line {
+            width: 2px;
+            background: #d0d0d0;
+            position: absolute;
+            top: 20px;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .route-item:last-child .marker-line {
+            display: none;
+        }
+
+        .route-info {
+            flex: 1;
+            padding-top: 0;
+        }
+
+        .route-title {
+            font-size: 18px;
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+
+        .route-subtitle {
+            font-size: 16px;
+            color: #999;
+            line-height: 1.3;
+        }
+
+        /* ========== BOTTOM BUTTONS ========== */
+        .bottom-buttons {
+            display: flex;
+            gap: 0;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
+        }
+
+        .bottom-btn {
+            flex: 1;
+            padding: 18px 20px;
+            border: none;
+            background: #ffc107;
+            color: #000;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .bottom-btn:first-child {
+            border-right: 0.5px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .bottom-btn:active {
+            background: #ffb300;
+        }
+
+        /* ========== NAVIGATION BAR ========== */
+        .navigation-bar {
+            height: 62px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .nav-item {
+            width: 64px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .nav-item:active {
+            color: #999;
+        }
+
+        .nav-menu {
+            font-weight: 400;
+            letter-spacing: 1px;
+            font-size: 20px;
+        }
+
+        .nav-circle {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid #aaa;
+            border-radius: 50%;
+        }
+
+        .nav-back {
+            font-size: 28px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span>12:24</span>
+                <span>✓</span>
+                <span>📞</span>
+                <span>📧</span>
+            </div>
+            <div class="status-right">
+                <span>🔇</span>
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋 29</span>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div class="map-content">
+                <!-- Map Street Labels -->
+                <div class="map-street street-vinitsa">Vinitsa Blvd</div>
+                <div class="map-street street-slivnitsa">Slivnitsa Blvd</div>
+                
+                <!-- Map Icons -->
+                <div class="map-icon icon-1">1</div>
+                <div class="map-icon icon-2">1</div>
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" aria-label="Go back">‹</button>
+                    <div class="logo">TAXSEE</div>
+                </div>
+                <button class="star-btn" aria-label="Favorite">☆</button>
+            </div>
+
+            <!-- Feedback Bar -->
+            <div class="feedback-container">
+                <div class="feedback-bar">
+                    <span class="feedback-label">How did we do?</span>
+                    <div class="feedback-divider"></div>
+                    <div class="feedback-buttons">
+                        <button class="thumb-btn" aria-label="Like">
+                            <svg class="thumb-icon" viewBox="0 0 24 24" fill="white">
+                                <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                            </svg>
+                        </button>
+                        <button class="thumb-btn" aria-label="Dislike">
+                            <svg class="thumb-icon" viewBox="0 0 24 24" fill="white">
+                                <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="feedback-text">Metrics</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="sheet-handle"></div>
+            <div class="content">
+                <!-- Order Details -->
+                <div class="order-section">
+                    <div class="order-text">
+                        Your order was fulfilled by <span class="driver-name">Mitko</span> in a<br>
+                        <span class="car-details">light gray Mercedes E-class</span>, license plate<br>
+                        number <span class="license-plate">7271</span>.<br>
+                        Thank you for riding with us!
+                    </div>
+                    <div class="rating">
+                        Rating <span class="stars">★★★★☆</span><span class="rating-score">(4.45)</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn" aria-label="Send message">
+                        <div class="action-btn-circle">
+                            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="#666">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn-label">Message</div>
+                    </button>
+                    <button class="action-btn" aria-label="Contact support">
+                        <div class="action-btn-circle">
+                            <svg class="action-btn-icon" viewBox="0 0 24 24" fill="#666">
+                                <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn-label">Support</div>
+                    </button>
+                </div>
+
+                <!-- Route and Price -->
+                <div class="route-price-wrapper">
+                    <!-- Price Badge -->
+                    <div class="price-badge">
+                        <div class="price-amount">лв24.3</div>
+                        <div class="price-label">in cash</div>
+                    </div>
+
+                    <!-- Route Section -->
+                    <div class="route-section">
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-circle"></div>
+                                <div class="marker-line"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">307, Matey Preobrazhenski street</div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-filled">1</div>
+                                <div class="marker-line"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">59, Uilyam Gladston street</div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-filled">2</div>
+                                <div class="route-info">
+                                    <div class="route-title">49, bul Samokov</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-filled">3</div>
+                                <div class="route-info">
+                                    <div class="route-title">Sesame</div>
+                                    <div class="route-subtitle">Lomsko highway</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="route-item">
+                            <div class="route-marker">
+                                <div class="marker-circle"></div>
+                            </div>
+                            <div class="route-info">
+                                <div class="route-title">307, Matey Preobrazhenski street</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Buttons -->
+                <div class="bottom-buttons">
+                    <button class="bottom-btn">Return route</button>
+                    <button class="bottom-btn">Repeat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <div class="nav-item nav-menu" aria-label="Menu">|||</div>
+            <div class="nav-item" aria-label="Home">
+                <div class="nav-circle"></div>
+            </div>
+            <div class="nav-item nav-back" aria-label="Back">‹</div>
+        </div>
     </div>
-  </body>
+</body>
 </html>
